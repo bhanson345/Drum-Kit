@@ -1,21 +1,21 @@
 //Detect button pressed
 
-var drumButtons = document.querySelectorAll(".drum").length;
+var drumButtons = $(".drum").length;
 
-for (var i = 0; i < drumButtons; i++) {
 
-    document.querySelectorAll(".drum")[i].addEventListener("click", function () {
-        var buttonInnerHTML = this.innerHTML;
-        makeSound(buttonInnerHTML);
-        buttonAnimate(buttonInnerHTML);
 
-    });
+$(".drum").click(function () {
+    var buttonInnerHTML = this.innerHTML;
+    makeSound(buttonInnerHTML);
+    buttonAnimate(buttonInnerHTML);
 
-}
+});
+
+
 
 // Detect keyboard press
 
-document.addEventListener("keydown", function (event) {
+$().keypress(function (event) {
 
     makeSound(event.key);
     buttonAnimate(event.key);
@@ -71,7 +71,7 @@ function buttonAnimate(currentkey) {
 
 
 // Play drums on button click
-document.querySelector(".play").addEventListener("click", function () {
+$(".play").click(function () {
 
 
     setTimeout(firstNote, 90);
@@ -79,31 +79,27 @@ document.querySelector(".play").addEventListener("click", function () {
     setTimeout(thirdNote, 1000);
     setTimeout(fourthNote, 1600);
     setTimeout(fifthNote, 2000);
-
-
-
-
 })
 
 
 //Notes
 
 function firstNote() {
-    document.querySelector(".k").click();
+    $(".k").click();
 }
 
 function secondNote() {
-    document.querySelector(".j").click();
+    $(".j").click();
 }
 
 function thirdNote() {
-    document.querySelector(".k").click();
+    $(".k").click();
 }
 
 function fourthNote() {
-    document.querySelector(".k").click();
+    $(".k").click();
 }
 
 function fifthNote() {
-    document.querySelector(".j").click();
+    $(".j").click();
 }
