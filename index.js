@@ -1,105 +1,85 @@
-//Detect button pressed
-
-var drumButtons = $(".drum").length;
-
-
-
-$(".drum").click(function () {
-    var buttonInnerHTML = this.innerHTML;
-    makeSound(buttonInnerHTML);
-    buttonAnimate(buttonInnerHTML);
-
-});
+var buttonColors = ["red", "blue", "green", "yellow"];
+var gamePattern = [];
+var userClickedPattern = [];
+var started = false;
+var level = 0;
 
 
-
-// Detect keyboard press
-
-$().keypress(function (event) {
-
-    makeSound(event.key);
-    buttonAnimate(event.key);
-});
-
-function makeSound(key) {
-    switch (key) {
-        case "w":
-            var tom1 = new Audio("sounds/tom-1.mp3");
-            tom1.play();
-            break;
-        case "a":
-            var tom2 = new Audio("sounds/tom-2.mp3");
-            tom2.play();
-            break;
-        case "s":
-            var tom3 = new Audio("sounds/tom-3.mp3");
-            tom3.play();
-            break;
-        case "d":
-            var tom4 = new Audio("sounds/tom-4.mp3");
-            tom4.play();
-            break;
-        case "j":
-            var snare = new Audio("sounds/snare.mp3");
-            snare.play();
-            break;
-        case "k":
-            var kick = new Audio("sounds/kick-bass.mp3");
-            kick.play();
-            break;
-        case "l":
-            var crash = new Audio("sounds/crash.mp3");
-            crash.play();
-            break;
-
-        default:
-            console.log(buttonInnerHTML);
-            break;
+// Start Game
+$(document).keypress(function () {
+    if (!started) {
+        $("#level-title").text("Level " + level);
+        nextSequence();
+        started = true;
     }
+});
+
+
+
+
+// Button Click
+$(".btn").click(function () {
+    var userColor = this.id;
+    userClickedPattern.push(userColor);
+    playSound(userColor);
+    animatePress(userColor);
+    checkAnswer(userClickedPattern.length - 1);
+});
+
+// Check Answer
+function checkAnswer(currentLevel) {
+    if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
+        //console.log("Success");
+
+
+        if (userClickedPattern.length === gamePattern.length) {
+            setTimeout(function () {
+                nextSequence();
+            }, 800);
+        }
+    } else {
+        var wrong = new Audio("sounds/wrong.mp3");
+        wrong.play();
+        $("body").css("background-color", "red");
+        setTimeout(function () {
+            $("body").css("background-color", "#011F3F")
+        }, 200);
+        $("h1").text("Game Over, Press Any Key to Restart").css("line-height", "5rem");
+        startOver();
+
+    }
+}
+
+
+// Functions
+
+function nextSequence() {
+    userClickedPattern = [];
+    level++
+    $("#level-title").text("Level " + level);
+    var randomNumber = (Math.random() * 4 | 0);
+    var randomColor = buttonColors[randomNumber];
+    gamePattern.push(randomColor);
+    $('#' + randomColor).fadeIn(100).fadeOut(100).fadeIn(100);
+    playSound(randomColor);
 
 }
 
-function buttonAnimate(currentkey) {
-
-    var activeButton = document.querySelector("." + currentkey)
-
-    activeButton.classList.add("pressed");
+function animatePress(currentColor) {
+    $("#" + currentColor).addClass("pressed")
     setTimeout(function () {
-        activeButton.classList.remove("pressed");
-    }, 100);
+        $("#" + currentColor).removeClass("pressed");
+    }, 80);
 }
 
 
-// Play drums on button click
-$(".play").click(function () {
-
-
-    setTimeout(firstNote, 90);
-    setTimeout(secondNote, 600);
-    setTimeout(thirdNote, 1000);
-    setTimeout(fourthNote, 1600);
-    setTimeout(fifthNote, 2000);
-})
-
-
-//Notes
-
-function firstNote() {
-    $(".k").click();
+function playSound(name) {
+    var sound = new Audio("sounds/" + name + ".mp3");
+    sound.play();
 }
 
-function secondNote() {
-    $(".j").click();
-}
-
-function thirdNote() {
-    $(".k").click();
-}
-
-function fourthNote() {
-    $(".k").click();
-}
-
-function fifthNote() {
-    $(".j").click();
+function startOver() {
+    level = 0;
+    gamePattern = [];
+    started = false;
 }
